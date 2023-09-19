@@ -52,7 +52,7 @@ async function getQuote() {
         // STOP LOADER, SHOW QUOTE
         removeLoadingSpinner();
 
-        throw new Error('Oops!!')
+        // throw new Error('Oops!!')
 
     } catch(error) {
         getQuote();
