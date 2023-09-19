@@ -3,9 +3,28 @@ const quoteText = document.getElementById('quote')
 const authorText = document.getElementById('author')
 const twitterBtn = document.getElementById('twitter')
 const newQuote = document.getElementById('new-quote')
+const loader = document.getElementById('loader')
+
+
+// SHOW LOADING
+function showLoadingSpinner() {
+    loader.hidden = false;
+    quoteContainer.hidden = true;
+}
+
+// HIDE LOADING
+function removeLoadingSpinner() {
+    if(!loader.hidden) {
+        quoteContainer.hidden = false;
+        loader.hidden = true;
+    }
+}
 
 // GET QUOTE FROM API
 async function getQuote() {
+
+    showLoadingSpinner();
+    
     const apiUrl = 'https://api.quotable.io/random';
 
     try {
@@ -13,6 +32,7 @@ async function getQuote() {
         const data = await response.json();
         // console.log('data ->', quoteText);
 
+        // IF AUTHOR IS BLANK, ADD 'Unknown'
         if(data.author === '') {
             authorText.innerText = 'Unknown'
         }
@@ -20,7 +40,8 @@ async function getQuote() {
             authorText.innerText ='- '+data.author
         }
 
-        if(data.content.length > 50) {
+        // REDUCE FONT SIZE FOR LONG QUOTES
+        if(data.content.length > 120) {
             quoteText.classList.add('long-quote')
         }
         else {
@@ -28,8 +49,13 @@ async function getQuote() {
         }
         quoteText.textContent = data.content;
 
+        // STOP LOADER, SHOW QUOTE
+        removeLoadingSpinner();
+
+        throw new Error('Oops!!')
+
     } catch(error) {
-        console.log('whopps, no quote', error)
+        getQuote();
     }
 }
 
@@ -47,3 +73,4 @@ twitterBtn.addEventListener('click', tweetQuote)
 
 // ON LOAD
 getQuote();
+
